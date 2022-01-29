@@ -1,15 +1,53 @@
 import { TextComponent } from "../components";
 import config from '../config.json';
+import axios from "axios";
 
-import GlobalStyle from "../GlobalStyles";
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Main = () => {
-  const username = "deboragoncalves";
+
+  // Box = div
+
+  // useState = array com dois elementos: variável e set
+  const [username, setUsername] = useState('deboragoncalves');
+  const [isUsernameValid, setUsernameValid] = useState(true);
+
+  const BASE_URL_GITHUB = 'https://api.github.com/users/';
+  const [urlGithub, setUrlGithub] = useState(`${BASE_URL_GITHUB}${username}`)
+
+  // router: objeto
+  let router = useRouter();
+
+  let changeUsername = event => {
+    setUsername(event.target.value);
+
+    // Se for > 2, imagem visivel
+    setUsernameValid(username.length > 2);
+
+    // Set url Github
+    setUrlGithub(`${BASE_URL_GITHUB}${username}`);
+  };
+
+  let submitForm = event => {
+
+    // Prevent default impede de recarregar a página ao fazer o submit
+    event.preventDefault();
+    router.push('/chat');
+  };
+
+  let navigateSite = () => {
+
+    if (!!username && !!urlGithub) {
+      axios.get(`${urlGithub}`).then(githubData => {
+        if (!!githubData.data.blog) window.location.href = githubData.data.blog;
+      })
+    }
+  }
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: "flex",
@@ -42,6 +80,7 @@ const Main = () => {
         >
           <Box
             as="form"
+            onSubmit={submitForm}
             styleSheet={{
               display: "flex",
               flexDirection: "column",
@@ -64,7 +103,10 @@ const Main = () => {
             </Text>
 
             <TextField
+              id="inputUsername"
               fullWidth
+              value={username}
+              onChange={changeUsername}
               textFieldColors={{
                 neutral: {
                   textColor: config.theme.colors.neutrals[200],
@@ -102,6 +144,7 @@ const Main = () => {
               styleSheet={{
                 borderRadius: "50%",
                 marginBottom: "16px",
+                visibility: isUsernameValid ? "visible" : "hidden"
               }}
               src={`https://github.com/${username}.png`}
             />
@@ -115,6 +158,19 @@ const Main = () => {
             >
               {username}
             </Text>
+            <Image
+              styleSheet={{
+                borderRadius: "50%",
+                marginBottom: "16px",
+                marginTop: "20px",
+                width: "54px",
+                height: "54px",
+                cursor: "pointer",
+              }}
+              src="https://image.flaticon.com/icons/png/512/189/189688.png"
+              alt="Website"
+              onClick={navigateSite}
+            ></Image>
           </Box>
         </Box>
       </Box>
