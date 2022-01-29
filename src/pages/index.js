@@ -123,3 +123,5 @@ const Main = () => {
 };
 
 export default Main;
+
+// TODO: Separar em componentes
