@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "devDependencies": {
-    "@iconify/react": "^3.1.3"
+    "@iconify/react": "^3.1.3",
+    "babel-plugin-styled-components": "^2.0.2"
   }
 }

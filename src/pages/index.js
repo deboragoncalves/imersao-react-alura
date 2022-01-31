@@ -1,5 +1,5 @@
 import { TextComponent } from "../components";
-import config from '../config.json';
+import config from "../config.json";
 import axios from "axios";
 
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
@@ -7,20 +7,19 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 const Main = () => {
-
   // Box = div
 
   // useState = array com dois elementos: variável e set
-  const [username, setUsername] = useState('deboragoncalves');
+  const [username, setUsername] = useState("deboragoncalves");
   const [isUsernameValid, setUsernameValid] = useState(true);
 
-  const BASE_URL_GITHUB = 'https://api.github.com/users/';
-  const [urlGithub, setUrlGithub] = useState(`${BASE_URL_GITHUB}${username}`)
+  const BASE_URL_GITHUB = "https://api.github.com/users/";
+  const [urlGithub, setUrlGithub] = useState(`${BASE_URL_GITHUB}${username}`);
 
   // router: objeto
   let router = useRouter();
 
-  let changeUsername = event => {
+  let changeUsername = (event) => {
     setUsername(event.target.value);
 
     // Se for > 2, imagem visivel
@@ -30,21 +29,21 @@ const Main = () => {
     setUrlGithub(`${BASE_URL_GITHUB}${username}`);
   };
 
-  let submitForm = event => {
-
+  let submitForm = (event) => {
     // Prevent default impede de recarregar a página ao fazer o submit
     event.preventDefault();
-    router.push('/chat');
+    router.push("/chat");
   };
 
   let navigateSite = () => {
-
     if (!!username && !!urlGithub) {
-      axios.get(`${urlGithub}`).then(githubData => {
+      axios.get(`${urlGithub}`).then((githubData) => {
+        // Requisição get para obter url
+
         if (!!githubData.data.blog) window.location.href = githubData.data.blog;
-      })
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -144,7 +143,7 @@ const Main = () => {
               styleSheet={{
                 borderRadius: "50%",
                 marginBottom: "16px",
-                visibility: isUsernameValid ? "visible" : "hidden"
+                visibility: isUsernameValid ? "visible" : "hidden",
               }}
               src={`https://github.com/${username}.png`}
             />
@@ -180,4 +179,11 @@ const Main = () => {
 
 export default Main;
 
-// TODO: Separar em componentes
+/* TODO: 
+
+Separar em componentes 
+Validar formulário antes do click
+Exibir mensagem erro quando mensagem for vazia
+Deletar mensagem enviada
+
+*/
