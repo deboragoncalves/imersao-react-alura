@@ -1,13 +1,56 @@
 import { Box, Button, TextField } from "@skynexui/components";
-import React from "react";
+import React, { useEffect } from "react";
 import config from "../config.json";
 import Header from "../components/HeaderChat";
 import MessageList from "../components/MessageList";
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 const ChatPage = () => {
+
+  // Superbase - lib - simulação banco de dados
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzgzMDIzNCwiZXhwIjoxOTU5NDA2MjM0fQ.tbCkcTjrFMZOE061Q_ffhaWP7XOSbAHV2z17Z9DPF7k";
+  const SUPABASE_URL = "https://qmyntdtyyfdmqysbaany.supabase.co";
+  const SUPERBASE_CLIENT = createClient(SUPABASE_URL, SUPABASE_KEY);
+
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+
+  const username = "deboragoncalves";
+
+  let getDataDB = () => {
+
+    // From recebe como parâmetro o nome da tabela - string
+    // Order - recebe como parâmetro uma string, que é o nome do campo (ref). asceding false, inverter ordem
+    // Poderia usar created_at
+
+    SUPERBASE_CLIENT.from("messages")
+      .select("*")
+      .order("id", { ascending: false })
+      .then(({ data }) => {
+
+        // Setar lista
+        setMessageList(data);
+      });
+  };
+
+  // UseEffect - quando segundo parâmetro é um array vazio, a função do primeiro parâmetro é chamada ao carregar a página
+  // Caso haja alguma variável no array, a função é chamada quando a variável é alterada
+  useEffect(getDataDB, []);
+
+  let insertDataDB = data => {
+
+      // Método insert recebe um array
+      SUPERBASE_CLIENT.from('messages').insert([data]).then(({ data }) => {
+        // Data: array com o objeto que foi inserido
+
+        // Setar lista de mensagens. spread
+        messageList = [data[0], ...messageList];
+
+        setMessageList(messageList);
+      });
+  }
 
   let changeMessage = (event) => {
     setMessage(event.target.value);
@@ -30,20 +73,21 @@ const ChatPage = () => {
   };
 
   let sendMessage = () => {
+
+    // Objeto deve ter as chaves = nomes dos campos da tabela
+    // Retirar id - autoincremento
     const messageObject = {
-      id: messageList.length + 1,
-      from: "deboragoncalves",
-      textMessage: message,
+      from: username,
+      textMessage: message
     };
 
     if (!!messageObject.textMessage) {
-        // Inserir e setar mensagem usando spread
-        messageList = [messageObject, ...messageList];
+    
+        // Inserir na tabela
+        insertDataDB(messageObject);
 
-        setMessageList(messageList);
-
-        // Limpar textarea
-        setMessage("");
+      // Limpar textarea
+      setMessage("");
     }
   };
 

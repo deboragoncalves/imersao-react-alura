@@ -4,7 +4,7 @@ import config from "../config.json";
 
 const MessageList = (props) => {
   const messages = props.messages;
-  const username = 'deboragoncalves';
+  const username = "deboragoncalves";
 
   return (
     <>
@@ -19,50 +19,66 @@ const MessageList = (props) => {
           marginBottom: "16px",
         }}
       >
-        {messages.map(message => {
+        {messages.map((message) => {
           return (
             <Text
-            key={message.id}
-            tag="li"
-            styleSheet={{
-              borderRadius: "5px",
-              padding: "6px",
-              marginBottom: "12px",
-              hover: {
-                backgroundColor: config.theme.colors.neutrals[700],
-              },
-            }}
-          >
-            <Box
+              key={message.id}
+              tag="li"
               styleSheet={{
-                marginBottom: "8px",
+                borderRadius: "5px",
+                padding: "6px",
+                marginBottom: "12px",
+                hover: {
+                  backgroundColor: config.theme.colors.neutrals[700],
+                },
               }}
             >
-              <Image
+              <Box
                 styleSheet={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  display: "inline-block",
-                  marginRight: "8px",
+                  marginBottom: "8px",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
-                src={`https://github.com/${username}.png`}
-              />
-              <Text tag="strong">{message.from}</Text>
-              <Text
-                styleSheet={{
-                  fontSize: "10px",
-                  marginLeft: "8px",
-                  color: config.theme.colors.neutrals[300],
-                }}
-                tag="span"
               >
-                {new Date().toLocaleDateString()}
-              </Text>
-            </Box>
-            {message.textMessage}
-          </Text>
-          )
+                <Box
+                  styleSheet={{
+                    marginBottom: "8px",
+                    display: "flex",
+                  }}
+                >
+                  <Image
+                    styleSheet={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      marginRight: "8px",
+                    }}
+                    src={`https://github.com/${username}.png`}
+                  />
+                  <Text tag="strong"
+                    styleSheet={{
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                  >{message.from}</Text>
+                </Box>
+
+                <Text
+                  styleSheet={{
+                    fontSize: "10px",
+                    marginLeft: "8px",
+                    fontSize: "12px",
+                    color: config.theme.colors.neutrals[300],
+                  }}
+                  tag="span"
+                >
+                  {new Date().toLocaleDateString()}
+                </Text>
+              </Box>
+              {message.textMessage}
+            </Text>
+          );
         })}
       </Box>
     </>
