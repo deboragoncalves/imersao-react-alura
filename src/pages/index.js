@@ -188,5 +188,6 @@ Deletar mensagem enviada
 Loading ao carregar página de chat
 Componente com infos no event mouseover - foto usuário - chat.js
 Adicionar sticker/gif 
+Responsivo
 
 */
