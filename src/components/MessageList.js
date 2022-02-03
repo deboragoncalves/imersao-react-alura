@@ -4,7 +4,6 @@ import config from "../config.json";
 
 const MessageList = (props) => {
   const messages = props.messages;
-  const username = "deboragoncalves";
 
   return (
     <>
@@ -54,7 +53,7 @@ const MessageList = (props) => {
                       display: "inline-block",
                       marginRight: "8px",
                     }}
-                    src={`https://github.com/${username}.png`}
+                    src={`https://github.com/${message.from}.png`}
                   />
                   <Text tag="strong"
                     styleSheet={{

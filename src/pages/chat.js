@@ -3,10 +3,14 @@ import React, { useEffect } from "react";
 import config from "../config.json";
 import Header from "../components/HeaderChat";
 import MessageList from "../components/MessageList";
+import ButtonSticker from "../components/ButtonSticker";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 
 const ChatPage = () => {
+  let router = useRouter();
+  let username = router.query.username;
 
   // Superbase - lib - simulação banco de dados
   const SUPABASE_KEY =
@@ -17,10 +21,7 @@ const ChatPage = () => {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
-  const username = "deboragoncalves";
-
   let getDataDB = () => {
-
     // From recebe como parâmetro o nome da tabela - string
     // Order - recebe como parâmetro uma string, que é o nome do campo (ref). asceding false, inverter ordem
     // Poderia usar created_at
@@ -29,7 +30,6 @@ const ChatPage = () => {
       .select("*")
       .order("id", { ascending: false })
       .then(({ data }) => {
-
         // Setar lista
         setMessageList(data);
       });
@@ -39,10 +39,11 @@ const ChatPage = () => {
   // Caso haja alguma variável no array, a função é chamada quando a variável é alterada
   useEffect(getDataDB, []);
 
-  let insertDataDB = data => {
-
-      // Método insert recebe um array
-      SUPERBASE_CLIENT.from('messages').insert([data]).then(({ data }) => {
+  let insertDataDB = (data) => {
+    // Método insert recebe um array
+    SUPERBASE_CLIENT.from("messages")
+      .insert([data])
+      .then(({ data }) => {
         // Data: array com o objeto que foi inserido
 
         // Setar lista de mensagens. spread
@@ -50,7 +51,7 @@ const ChatPage = () => {
 
         setMessageList(messageList);
       });
-  }
+  };
 
   let changeMessage = (event) => {
     setMessage(event.target.value);
@@ -73,18 +74,16 @@ const ChatPage = () => {
   };
 
   let sendMessage = () => {
-
     // Objeto deve ter as chaves = nomes dos campos da tabela
     // Retirar id - autoincremento
     const messageObject = {
       from: username,
-      textMessage: message
+      textMessage: message,
     };
 
     if (!!messageObject.textMessage) {
-    
-        // Inserir na tabela
-        insertDataDB(messageObject);
+      // Inserir na tabela
+      insertDataDB(messageObject);
 
       // Limpar textarea
       setMessage("");
@@ -149,6 +148,7 @@ const ChatPage = () => {
                 alignItems: "center",
               }}
             >
+              <ButtonSticker />
               <TextField
                 value={message}
                 placeholder="Insira sua mensagem aqui..."
